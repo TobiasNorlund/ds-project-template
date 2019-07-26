@@ -1,0 +1,6 @@
+tensorflow-datasets==1.0.2
+matplotlib==3.0.3
+tensorboard==1.14.0
+jupyter==1.0.0
+jupyter_contrib_nbextensions==0.5.1
+jupyter_nbextensions_configurator==0.4.1
