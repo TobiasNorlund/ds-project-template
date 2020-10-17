@@ -6,7 +6,7 @@ source "$SCRIPTS_DIR/common.sh"
 for arg in "$@"
 do
     if [ $arg == "gpu" ]; then
-      RUNTIME_ARGS="--runtime nvidia"
+      RUNTIME_ARGS="--gpus all"
     elif [ $arg == "notebook" ]; then
       JUPYTER_PORT="-p 8888:8888"
     elif [ $arg == "tensorboard" ]; then
@@ -21,7 +21,7 @@ USER_MAP="-u $(id -u):$(id -g)"
 
 set -x
 docker run --rm -it \
-  -v $PROJECT_ROOT:/opt/project \
+  -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \
   -v /tmp:/tmp \
   $USER_MAP \
   $RUNTIME_ARGS \

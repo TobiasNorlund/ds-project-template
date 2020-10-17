@@ -1,7 +1,13 @@
-FROM tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
+FROM python:3.8
 
-RUN mkdir -p /opt/project/src
-WORKDIR /opt/project/src
+RUN apt update && apt install -y less nano jq
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY bash.bashrc /etc/bash.bashrc
+
+ENV HOME=/tmp
+ARG DOCKER_WORKSPACE_PATH
+RUN mkdir -p $DOCKER_WORKSPACE_PATH/src
+WORKDIR $DOCKER_WORKSPACE_PATH/src
+
+# TODO: List project dependencies here
+# RUN pip install ...
