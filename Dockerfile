@@ -1,5 +1,7 @@
 FROM python:3.8
 
+RUN groupadd -r docker-user && useradd -r -m -s /bin/false -g docker-user docker-user
+
 RUN apt update && apt install -y less nano jq git
 
 COPY bash.bashrc /etc/bash.bashrc
