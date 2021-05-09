@@ -57,6 +57,7 @@ docker build --rm --build-arg DOCKER_WORKSPACE_PATH -t $DOCKER_IMAGE_NAME $PROJE
 docker run --rm -it \
   --name $CONTAINER_NAME \
   -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \
+  --ipc host \
   $MOUNT \
   $USER_MAP \
   $RUNTIME_ARGS \
