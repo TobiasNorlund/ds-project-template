@@ -5,10 +5,10 @@ This repo constitutes a skeleton for a typical ML/DS project. Docker is a first 
 When starting a new project, please do the following:
 
 1. On GitHub, create your own repository from this template by clicking the "Use this template" button
-2. Update `DOCKER_IMAGE_NAME` in `scripts/start.sh`
+2. Update `DOCKER_IMAGE_NAME` in `start.sh`
 3. Build and start a docker container:
 ```bash
-./scripts/start.sh [--gpu] [--notebook] [--tensorboard] [-v|--mount /host/path:/container/path] [--detach]
+./start.sh [--gpu] [--notebook] [--tensorboard] [-v|--mount /host/path:/container/path] [--detach]
 ```
 5. Start a development container in VS Code:
    There are two ways this can be done. 
