@@ -1,17 +1,24 @@
 #!/bin/bash
 set -e
 
+# Path to repo/project root dir (independent of pwd)
+PROJECT_ROOT=$( cd $(dirname $(readlink -f $0) ); pwd )
+
+# Load environment variables from (non-tracked) .env file
+if [ -f "$PROJECT_ROOT/.env" ]
+then
+    export $(cat $PROJECT_ROOT/.env | xargs)
+fi
+
 # Docker image name for this project
-export DOCKER_IMAGE_NAME="tobias/default"
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-tobias/default}"
 
 # Path to where in the docker container the project root will be mounted
-export DOCKER_WORKSPACE_PATH="/workspace"
-
-# Path to repo/project root dir (independent of pwd)
-export PROJECT_ROOT=$( cd $(dirname $( dirname "${BASH_SOURCE[0]}") ); pwd )
+export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 
 # Path to data dir
-export DATA_DIR="$PROJECT_ROOT/data"
+DATA_DIR="${DATA_DIR:-$PROJECT_ROOT/data}"
+
 
 while [[ $# -gt 0 ]]
 do
@@ -57,6 +64,7 @@ docker build --rm --build-arg DOCKER_WORKSPACE_PATH -t $DOCKER_IMAGE_NAME $PROJE
 docker run --rm -it \
   --name $CONTAINER_NAME \
   -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \
+  -v $DATA_DIR:$DOCKER_WORKSPACE_PATH/data \
   --ipc host \
   $MOUNT \
   $USER_MAP \
