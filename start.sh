@@ -16,9 +16,12 @@ DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-tobias/default}"
 # Path to where in the docker container the project root will be mounted
 export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 
-# Path to data dir
-DATA_DIR="${DATA_DIR:-$PROJECT_ROOT/data}"
+# Docker user id and group id
+export DOCKER_UID=`id -u`
+export DOCKER_GID=`id -g`
 
+# Path to where in the docker container the project root will be mounted
+export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 
 while [[ $# -gt 0 ]]
 do
@@ -53,21 +56,33 @@ case $key in
 esac
 done
 
-USER_MAP="-u $(id -u):$(id -g)"
-CONTAINER_NAME=${DOCKER_IMAGE_NAME##*/}
+CONTAINER_NAME="${CONTAINER_NAME:-${DOCKER_IMAGE_NAME//\//-}}"
+HOME_VOLUME_NAME="${HOME_VOLUME_NAME:-$CONTAINER_NAME-home}"
 
 # Stop any potentially running container with the same name
 docker stop $CONTAINER_NAME 2> /dev/null || true
 
+# Check if there is a running ssh agent, if so we want to forward it
+if [[ ! -z "${SSH_AUTH_SOCK}" ]]; then
+  SSH_AGENT_FORWARD="-v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
+fi
+
+# Optionally set a data dir mount if DATA_DIR env is set
+if [[ ! -z "${DATA_DIR}" ]]; then
+  DATA_MOUNT="-v $DATA_DIR:$DOCKER_WORKSPACE_PATH/data"
+fi
+
+
 set -x
-docker build --rm --build-arg DOCKER_WORKSPACE_PATH -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
+docker build --rm --build-arg DOCKER_WORKSPACE_PATH --build-arg DOCKER_UID --build-arg DOCKER_GID -t $DOCKER_IMAGE_NAME $PROJECT_ROOT
 docker run --rm -it \
   --name $CONTAINER_NAME \
   -v $PROJECT_ROOT:$DOCKER_WORKSPACE_PATH \
-  -v $DATA_DIR:$DOCKER_WORKSPACE_PATH/data \
+  -v $HOME_VOLUME_NAME:/home/docker-user \
   --ipc host \
+  $DATA_MOUNT \
+  $SSH_AGENT_FORWARD \
   $MOUNT \
-  $USER_MAP \
   $RUNTIME_ARGS \
   $JUPYTER_PORT \
   $TENSORBOARD_PORT \
