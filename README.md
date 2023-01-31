@@ -5,18 +5,12 @@ This repo constitutes a skeleton for a typical ML/DS project. Docker is a first 
 When starting a new project, please do the following:
 
 1. On GitHub, create your own repository from this template by clicking the "Use this template" button
-2. Update `DOCKER_IMAGE_NAME` in `start.sh`
-3. Build and start a docker container:
+2. Update `DOCKER_IMAGE_NAME` in `start.sh`. Also set "name" in `.devcontainer/devcontainer.json` to the same name.
+3. In `.devcontainer/devcontainer.json`, update the `source=tobias-default-home` to the same name (but with dashes instead of slashes + "-home"). This is for the same home volume to be used whether or not the container is started with `start.sh` script or VS Code. 
+
+The devcontainer can either be started in a terminal, using the `start.sh` script:
 ```bash
-./start.sh [--gpu] [--notebook] [--tensorboard] [-v|--mount /host/path:/container/path] [--detach]
+./start.sh [--gpu] [-v|--mount /host/path:/container/path] [--detach]
 ```
-5. Start a development container in VS Code:
-   There are two ways this can be done. 
-   - Attach to the already running container (preferred when container is running on remote host)
-      - In VS Code, install the `Remote-Containers` extention
-      - Run `Remote-Containers: Attach to Running Container...` (F1). Select the newly created container
-      - In the Explorer pane, click `Open Folder` and type the workspace directory (by default mounted to `/workspace`)
-   - Let VS Code manage the container (preferred for local development)
-      - In VS Code, install the `Remote-Containers` extention
-      - Update `name` in `.devcontainer/devcontainer.json` to the value of `DOCKER_IMAGE_NAME`
-      - Run `Remote-Containers: Reopen in container` (F1). Select the newly created container
+Or using the `Dev Containers` extension to VS Code. 
+   - Run `Remote-Containers: Reopen in container` (F1).
