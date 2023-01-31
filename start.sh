@@ -20,9 +20,6 @@ export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
 export DOCKER_UID=`id -u`
 export DOCKER_GID=`id -g`
 
-# Path to where in the docker container the project root will be mounted
-export DOCKER_WORKSPACE_PATH="${DOCKER_WORKSPACE_PATH:-/workspace}"
-
 while [[ $# -gt 0 ]]
 do
 key="$1"
